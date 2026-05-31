@@ -40,12 +40,27 @@ export default function App() {
     localStorage.setItem('darkMode', String(dark));
   }, [dark]);
 
-  const [form, setForm] = useState<FormValues>({
-    creditAmount: '',
-    annualRatePercent: '',
-    monthlyPayment: '',
-    startDate: todayFirstOfMonth(),
+  const [form, setForm] = useState<FormValues>(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('formValues') ?? 'null');
+      return {
+        creditAmount: saved?.creditAmount ?? '',
+        annualRatePercent: saved?.annualRatePercent ?? '',
+        monthlyPayment: saved?.monthlyPayment ?? '',
+        startDate: todayFirstOfMonth(),
+      };
+    } catch {
+      return { creditAmount: '', annualRatePercent: '', monthlyPayment: '', startDate: todayFirstOfMonth() };
+    }
   });
+
+  useEffect(() => {
+    localStorage.setItem('formValues', JSON.stringify({
+      creditAmount: form.creditAmount,
+      annualRatePercent: form.annualRatePercent,
+      monthlyPayment: form.monthlyPayment,
+    }));
+  }, [form.creditAmount, form.annualRatePercent, form.monthlyPayment]);
 
   const [simForm, setSimForm] = useState<SimFormValues>({
     extraAmount: '',
