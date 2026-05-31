@@ -16,7 +16,8 @@ export default function PayoffTable({ rows }: Props) {
         Payoff Schedule
         <span className="ml-2 text-sm font-normal text-gray-400 dark:text-gray-500">({rows.length} payments)</span>
       </h2>
-      <div className="overflow-x-auto max-h-96 overflow-y-auto rounded-lg border border-gray-100 dark:border-gray-700">
+      <div className="overflow-x-auto rounded-lg border border-gray-100 dark:border-gray-700">
+        <div className="max-h-96 overflow-y-auto">
         <table className="min-w-full text-sm text-right">
           <thead className="sticky top-0 bg-gray-50 dark:bg-gray-700 text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
             <tr>
@@ -47,6 +48,7 @@ export default function PayoffTable({ rows }: Props) {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
       <p className="sm:hidden mt-2 text-center text-xs text-gray-400 dark:text-gray-500 select-none">
         ← scroll to see all columns →

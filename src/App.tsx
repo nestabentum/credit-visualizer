@@ -14,6 +14,12 @@ import {
 
 const EUR = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
 
+/** Parses a YYYY-MM-DD string as local midnight, avoiding the UTC-offset date-shift bug. */
+function parseLocalDate(s: string): Date {
+  const [y, m, d] = s.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
 function todayFirstOfMonth(): string {
   const d = new Date();
   // Jump to next 1st if we're not already on it
@@ -57,7 +63,7 @@ export default function App() {
     if (!amount || form.annualRatePercent === '' || isNaN(rate) || !payment || !form.startDate) return null;
     if (amount <= 0 || rate < 0 || payment <= 0) return null;
 
-    const startDate = new Date(form.startDate);
+    const startDate = parseLocalDate(form.startDate);
     if (isNaN(startDate.getTime())) return null;
 
     const calc = calculatePayoff({ creditAmount: amount, annualRatePercent: rate, monthlyPayment: payment, startDate });
@@ -85,7 +91,7 @@ export default function App() {
     const amount = Number(form.creditAmount);
     const rate = Number(form.annualRatePercent);
     const payment = Number(form.monthlyPayment);
-    const startDate = new Date(form.startDate);
+    const startDate = parseLocalDate(form.startDate);
 
     const calc = calculatePayoff({
       creditAmount: amount,
@@ -109,7 +115,7 @@ export default function App() {
 
     if (!altPayment || altPayment <= minPay) return null;
 
-    const startDate = new Date(form.startDate);
+    const startDate = parseLocalDate(form.startDate);
 
     const calc = calculatePayoff({
       creditAmount: amount,
