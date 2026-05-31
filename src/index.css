@@ -4,10 +4,11 @@
 
 @layer base {
   html {
-    @apply bg-blue-50 dark:bg-gray-900;
+    @apply bg-blue-50;
     color-scheme: light;
   }
   html.dark {
+    @apply bg-gray-900;
     color-scheme: dark;
   }
 }
