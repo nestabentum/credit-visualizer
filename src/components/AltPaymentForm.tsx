@@ -47,6 +47,7 @@ export default function AltPaymentForm({ values, onChange, minPayment }: Props) 
         <input
           id="altMonthlyPayment"
           type="number"
+          inputMode="decimal"
           min={Math.ceil(minPayment) + 1}
           step="50"
           placeholder={`> ${Math.ceil(minPayment)}`}

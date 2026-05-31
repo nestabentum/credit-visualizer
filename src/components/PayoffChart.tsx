@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   LineChart,
   Line,
@@ -28,6 +29,14 @@ interface ChartPoint {
 }
 
 export default function PayoffChart({ rows, simRows, altRows }: Props) {
+  const [isNarrow, setIsNarrow] = useState(() => window.innerWidth < 640);
+
+  useEffect(() => {
+    const handler = () => setIsNarrow(window.innerWidth < 640);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+
   if (rows.length === 0) return null;
 
   const initialBalance = rows[0].remainingBalance + rows[0].principal;
@@ -76,8 +85,8 @@ export default function PayoffChart({ rows, simRows, altRows }: Props) {
     }
   }
 
-  // Show at most ~12 tick labels to avoid crowding
-  const tickInterval = Math.max(1, Math.floor(data.length / 12));
+  // Show at most ~12 tick labels on desktop, ~5 on mobile to avoid crowding
+  const tickInterval = Math.max(1, Math.floor(data.length / (isNarrow ? 5 : 12)));
   const ticks = data
     .filter((_, i) => i === 0 || i === data.length - 1 || i % tickInterval === 0)
     .map((d) => d.rawDate);
@@ -100,7 +109,7 @@ export default function PayoffChart({ rows, simRows, altRows }: Props) {
           <YAxis
             tickFormatter={(v) => EUR.format(v)}
             tick={{ fontSize: 11 }}
-            width={90}
+            width={isNarrow ? 68 : 90}
           />
           <Tooltip
             formatter={(value, name) => {

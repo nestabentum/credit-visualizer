@@ -47,6 +47,7 @@ export default function InputForm({ values, onChange, paymentTooLow }: Props) {
         value={values.creditAmount}
         onChange={handle('creditAmount')}
         error={errors.creditAmount}
+        inputMode="decimal"
       />
       <Field
         label="Interest Rate (% p.a.)"
@@ -58,6 +59,7 @@ export default function InputForm({ values, onChange, paymentTooLow }: Props) {
         value={values.annualRatePercent}
         onChange={handle('annualRatePercent')}
         error={errors.annualRatePercent}
+        inputMode="decimal"
       />
       <Field
         label="Monthly Payment (€)"
@@ -69,6 +71,7 @@ export default function InputForm({ values, onChange, paymentTooLow }: Props) {
         value={values.monthlyPayment}
         onChange={handle('monthlyPayment')}
         error={errors.monthlyPayment}
+        inputMode="decimal"
       />
       <Field
         label="First Payment Date"
@@ -93,9 +96,10 @@ interface FieldProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode'];
 }
 
-function Field({ label, id, type, min, step, placeholder, value, onChange, error }: FieldProps) {
+function Field({ label, id, type, min, step, placeholder, value, onChange, error, inputMode }: FieldProps) {
   return (
     <div className="flex flex-col gap-1">
       <label htmlFor={id} className="text-sm font-medium text-gray-700 dark:text-gray-200">
@@ -109,6 +113,7 @@ function Field({ label, id, type, min, step, placeholder, value, onChange, error
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        inputMode={inputMode}
         className={`rounded-lg border px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 ${
           error ? 'border-red-400 focus:ring-red-400' : 'border-gray-300 dark:border-gray-600'
         }`}

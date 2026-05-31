@@ -44,6 +44,7 @@ export default function SimulationForm({ values, onChange, maxMonth }: Props) {
           <input
             id="extraAmount"
             type="number"
+            inputMode="decimal"
             min="1"
             step="500"
             placeholder="e.g. 5000"
@@ -64,6 +65,7 @@ export default function SimulationForm({ values, onChange, maxMonth }: Props) {
           <input
             id="atMonth"
             type="number"
+            inputMode="numeric"
             min="1"
             max={maxMonth}
             step="1"
