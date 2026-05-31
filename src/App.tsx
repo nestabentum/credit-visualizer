@@ -11,6 +11,7 @@ import {
   minMonthlyPayment,
   type PayoffResult,
 } from './utils/calculatePayoff';
+import { parseGermanNumber } from './utils/parseNumber';
 
 const EUR = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
 
@@ -56,9 +57,9 @@ export default function App() {
   });
 
   const result = useMemo<{ data: PayoffResult; paymentTooLow?: number } | null>(() => {
-    const amount = Number(form.creditAmount);
-    const rate = Number(form.annualRatePercent);
-    const payment = Number(form.monthlyPayment);
+    const amount = parseGermanNumber(form.creditAmount);
+    const rate = parseGermanNumber(form.annualRatePercent);
+    const payment = parseGermanNumber(form.monthlyPayment);
 
     if (!amount || form.annualRatePercent === '' || isNaN(rate) || !payment || !form.startDate) return null;
     if (amount <= 0 || rate < 0 || payment <= 0) return null;
@@ -82,15 +83,15 @@ export default function App() {
   const simResult = useMemo<PayoffResult | null>(() => {
     if (!result?.data || result.data.rows.length === 0) return null;
 
-    const extraAmount = Number(simForm.extraAmount);
+    const extraAmount = parseGermanNumber(simForm.extraAmount);
     const atMonth = Number(simForm.atMonth);
 
     if (!extraAmount || extraAmount <= 0 || !atMonth || !Number.isInteger(atMonth)) return null;
     if (atMonth < 1 || atMonth > result.data.rows.length) return null;
 
-    const amount = Number(form.creditAmount);
-    const rate = Number(form.annualRatePercent);
-    const payment = Number(form.monthlyPayment);
+    const amount = parseGermanNumber(form.creditAmount);
+    const rate = parseGermanNumber(form.annualRatePercent);
+    const payment = parseGermanNumber(form.monthlyPayment);
     const startDate = parseLocalDate(form.startDate);
 
     const calc = calculatePayoff({
@@ -108,9 +109,9 @@ export default function App() {
   const altPayResult = useMemo<PayoffResult | null>(() => {
     if (!result?.data || result.data.rows.length === 0) return null;
 
-    const altPayment = Number(altPayForm.altMonthlyPayment);
-    const amount = Number(form.creditAmount);
-    const rate = Number(form.annualRatePercent);
+    const altPayment = parseGermanNumber(altPayForm.altMonthlyPayment);
+    const amount = parseGermanNumber(form.creditAmount);
+    const rate = parseGermanNumber(form.annualRatePercent);
     const minPay = minMonthlyPayment(amount, rate);
 
     if (!altPayment || altPayment <= minPay) return null;
@@ -133,8 +134,8 @@ export default function App() {
   const totalPaid = result?.data.totalPaid ?? 0;
 
   const minPaymentHint = useMemo(() => {
-    const amount = Number(form.creditAmount);
-    const rate = Number(form.annualRatePercent);
+    const amount = parseGermanNumber(form.creditAmount);
+    const rate = parseGermanNumber(form.annualRatePercent);
     if (amount > 0 && rate >= 0 && !isNaN(rate)) {
       return minMonthlyPayment(amount, rate);
     }
@@ -176,7 +177,7 @@ export default function App() {
         {/* Summary strip */}
         {rows.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <SummaryCard label="Loan Amount" value={EUR.format(Number(form.creditAmount))} />
+            <SummaryCard label="Loan Amount" value={EUR.format(parseGermanNumber(form.creditAmount))} />
             <SummaryCard label="Total Payments" value={rows.length.toString()} suffix="months" />
             <SummaryCard label="Total Interest" value={EUR.format(totalInterest)} highlight="red" />
             <SummaryCard label="Total Paid" value={EUR.format(totalPaid)} highlight="blue" />
@@ -197,7 +198,7 @@ export default function App() {
             <AltPaymentForm
               values={altPayForm}
               onChange={setAltPayForm}
-              minPayment={minMonthlyPayment(Number(form.creditAmount), Number(form.annualRatePercent))}
+              minPayment={minMonthlyPayment(parseGermanNumber(form.creditAmount), parseGermanNumber(form.annualRatePercent))}
             />
           </div>
         )}

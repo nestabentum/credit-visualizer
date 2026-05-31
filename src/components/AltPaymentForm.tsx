@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { parseGermanNumber } from '../utils/parseNumber';
 
 export interface AltPayFormValues {
   altMonthlyPayment: string;
@@ -18,7 +19,7 @@ export default function AltPaymentForm({ values, onChange, minPayment }: Props) 
     onChange({ altMonthlyPayment: e.target.value });
   }
 
-  const num = Number(values.altMonthlyPayment);
+  const num = parseGermanNumber(values.altMonthlyPayment);
   let error: string | null = null;
   if (touched && values.altMonthlyPayment !== '') {
     if (isNaN(num) || num <= 0) {
@@ -46,11 +47,9 @@ export default function AltPaymentForm({ values, onChange, minPayment }: Props) 
         </label>
         <input
           id="altMonthlyPayment"
-          type="number"
+          type="text"
           inputMode="decimal"
-          min={Math.ceil(minPayment) + 1}
-          step="50"
-          placeholder={`> ${Math.ceil(minPayment)}`}
+          placeholder="z.B. 500"
           value={values.altMonthlyPayment}
           onChange={handle}
           className={`rounded-lg border px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 ${

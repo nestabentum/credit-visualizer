@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { parseGermanNumber } from '../utils/parseNumber';
 
 export interface FormValues {
   creditAmount: string;
@@ -24,11 +25,11 @@ export default function InputForm({ values, onChange, paymentTooLow }: Props) {
   }
 
   const errors: Partial<Record<keyof FormValues, string>> = {};
-  if (touched.creditAmount && (isNaN(Number(values.creditAmount)) || Number(values.creditAmount) <= 0))
+  if (touched.creditAmount && (isNaN(parseGermanNumber(values.creditAmount)) || parseGermanNumber(values.creditAmount) <= 0))
     errors.creditAmount = 'Please enter a positive amount.';
-  if (touched.annualRatePercent && (values.annualRatePercent === '' || isNaN(Number(values.annualRatePercent)) || Number(values.annualRatePercent) < 0))
+  if (touched.annualRatePercent && (values.annualRatePercent === '' || isNaN(parseGermanNumber(values.annualRatePercent)) || parseGermanNumber(values.annualRatePercent) < 0))
     errors.annualRatePercent = 'Please enter a rate ≥ 0.';
-  if (touched.monthlyPayment && (isNaN(Number(values.monthlyPayment)) || Number(values.monthlyPayment) <= 0))
+  if (touched.monthlyPayment && (isNaN(parseGermanNumber(values.monthlyPayment)) || parseGermanNumber(values.monthlyPayment) <= 0))
     errors.monthlyPayment = 'Please enter a positive payment.';
   if (paymentTooLow != null && touched.monthlyPayment)
     errors.monthlyPayment = `Payment must exceed the first month's interest (${fmt(paymentTooLow)}).`;
@@ -40,10 +41,8 @@ export default function InputForm({ values, onChange, paymentTooLow }: Props) {
       <Field
         label="Credit Amount (€)"
         id="creditAmount"
-        type="number"
-        min="1"
-        step="500"
-        placeholder="e.g. 20000"
+        type="text"
+        placeholder="z.B. 20.000"
         value={values.creditAmount}
         onChange={handle('creditAmount')}
         error={errors.creditAmount}
@@ -52,10 +51,8 @@ export default function InputForm({ values, onChange, paymentTooLow }: Props) {
       <Field
         label="Interest Rate (% p.a.)"
         id="annualRatePercent"
-        type="number"
-        min="0"
-        step="0.1"
-        placeholder="e.g. 3.5"
+        type="text"
+        placeholder="z.B. 3,5"
         value={values.annualRatePercent}
         onChange={handle('annualRatePercent')}
         error={errors.annualRatePercent}
@@ -64,10 +61,8 @@ export default function InputForm({ values, onChange, paymentTooLow }: Props) {
       <Field
         label="Monthly Payment (€)"
         id="monthlyPayment"
-        type="number"
-        min="1"
-        step="10"
-        placeholder="e.g. 350"
+        type="text"
+        placeholder="z.B. 350"
         value={values.monthlyPayment}
         onChange={handle('monthlyPayment')}
         error={errors.monthlyPayment}

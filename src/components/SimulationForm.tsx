@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { parseGermanNumber } from '../utils/parseNumber';
 
 export interface SimFormValues {
   extraAmount: string;
@@ -22,7 +23,7 @@ export default function SimulationForm({ values, onChange, maxMonth }: Props) {
   }
 
   const errors: Partial<Record<keyof SimFormValues, string>> = {};
-  if (touched.extraAmount && (isNaN(Number(values.extraAmount)) || Number(values.extraAmount) <= 0))
+  if (touched.extraAmount && (isNaN(parseGermanNumber(values.extraAmount)) || parseGermanNumber(values.extraAmount) <= 0))
     errors.extraAmount = 'Please enter a positive amount.';
 
   const monthNum = Number(values.atMonth);
@@ -43,11 +44,9 @@ export default function SimulationForm({ values, onChange, maxMonth }: Props) {
           </label>
           <input
             id="extraAmount"
-            type="number"
+            type="text"
             inputMode="decimal"
-            min="1"
-            step="500"
-            placeholder="e.g. 5000"
+            placeholder="z.B. 5.000"
             value={values.extraAmount}
             onChange={handle('extraAmount')}
             className={`rounded-lg border px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 ${
